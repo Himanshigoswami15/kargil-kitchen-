@@ -3,12 +3,17 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="description" content="An elegant, interactive digital menu for a fine dining experience, featuring easy ordering." />
+    <meta name="description" content="An elegant, interactive digital menu for a fine dining experience." />
     <title>Kargil Kitchen | Digital Menu</title>
+    
+    <!-- Tailwind CSS (Using CDN for simplicity in this setup, usually build step is preferred but this works) -->
     <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,400&family=Montserrat:wght@300;400;500&display=swap" rel="stylesheet">
+    
     <script>
       tailwind.config = {
         theme: {
@@ -28,8 +33,8 @@
                 500: '#518370',
                 600: '#3d6857',
                 700: '#325346',
-                800: '#204534', // Base requested background color
-                900: '#1a382b', // Darker shade for cards/footer
+                800: '#204534',
+                900: '#1a382b',
               }
             }
           }
@@ -40,6 +45,7 @@
       body {
         background-color: #204534;
         color: #ffffff;
+        margin: 0;
       }
       .hide-scrollbar::-webkit-scrollbar {
         display: none;
