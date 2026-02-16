@@ -1,13 +1,11 @@
 import { GoogleGenAI, Type } from "@google/genai";
 import { PairingResponse } from "../types";
 
-// Declare process to avoid TypeScript errors if types are missing during build steps
-declare const process: any;
+// Access API key using Vite's standard import.meta.env
+// Note: In standard Vite, variables must be prefixed with VITE_ to be exposed to the client
+const apiKey = import.meta.env.VITE_API_KEY || '';
 
-// Ensure we have a valid key or empty string to prevent crash
-const apiKey = process.env.API_KEY || '';
-
-// Lazy initialization function
+// Lazy initialization function to ensure we use the latest key and context
 const getAI = () => {
   if (!apiKey) return null;
   return new GoogleGenAI({ apiKey });
@@ -16,10 +14,10 @@ const getAI = () => {
 export const getWinePairing = async (dishName: string, dishDescription: string): Promise<PairingResponse> => {
   // Runtime check for API Key
   if (!apiKey) {
-    console.warn("API_KEY is missing. Wine pairing will be unavailable.");
+    console.warn("VITE_API_KEY is missing. Wine pairing will be unavailable.");
     return {
       wine: "Configuration Required",
-      description: "API Key is missing. Please configure the application settings."
+      description: "API Key is missing. Please ensure VITE_API_KEY is set in your .env file."
     };
   }
 
