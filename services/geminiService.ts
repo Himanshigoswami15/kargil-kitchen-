@@ -6,8 +6,12 @@ declare const process: any;
 
 // Ensure we have a valid key or empty string to prevent crash
 const apiKey = process.env.API_KEY || '';
-// Initialize conditionally or with empty string, but handle empty string in function
-const ai = new GoogleGenAI({ apiKey });
+
+// Lazy initialization function
+const getAI = () => {
+  if (!apiKey) return null;
+  return new GoogleGenAI({ apiKey });
+};
 
 export const getWinePairing = async (dishName: string, dishDescription: string): Promise<PairingResponse> => {
   // Runtime check for API Key
@@ -16,6 +20,14 @@ export const getWinePairing = async (dishName: string, dishDescription: string):
     return {
       wine: "Configuration Required",
       description: "API Key is missing. Please configure the application settings."
+    };
+  }
+
+  const ai = getAI();
+  if (!ai) {
+     return {
+      wine: "Configuration Required",
+      description: "API Key is missing or invalid."
     };
   }
 
