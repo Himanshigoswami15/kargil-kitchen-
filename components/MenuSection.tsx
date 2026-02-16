@@ -4,10 +4,10 @@ import MenuItemCard from './MenuItemCard';
 
 interface MenuSectionProps {
   category: MenuCategory;
-  onSommelierClick: (item: MenuItem) => void;
+  onAddToCart: (item: MenuItem) => void;
 }
 
-const MenuSection: React.FC<MenuSectionProps> = ({ category, onSommelierClick }) => {
+const MenuSection: React.FC<MenuSectionProps> = ({ category, onAddToCart }) => {
   return (
     <section id={category.id} className="py-12 scroll-mt-24">
       <div className="flex items-center justify-center mb-10">
@@ -23,7 +23,7 @@ const MenuSection: React.FC<MenuSectionProps> = ({ category, onSommelierClick })
           <MenuItemCard 
             key={item.id} 
             item={item} 
-            onSommelierClick={onSommelierClick} 
+            onAddToCart={onAddToCart} 
           />
         ))}
       </div>

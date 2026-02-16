@@ -13,6 +13,10 @@ export interface MenuCategory {
   items: MenuItem[];
 }
 
+export interface CartItem extends MenuItem {
+  quantity: number;
+}
+
 export interface PairingResponse {
   wine: string;
   description: string;

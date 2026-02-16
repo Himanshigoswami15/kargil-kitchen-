@@ -1,26 +1,57 @@
 import React, { useState } from 'react';
-import { Facebook, Instagram, Twitter } from 'lucide-react';
+import { Facebook, Instagram, Twitter, ShoppingBag } from 'lucide-react';
 import { MENU_DATA } from './data';
-import { MenuItem } from './types';
+import { MenuItem, CartItem } from './types';
 import MenuSection from './components/MenuSection';
 import CategoryNav from './components/CategoryNav';
-import SommelierModal from './components/SommelierModal';
-import BrandLogo from './components/BrandLogo';
+import CartSidebar from './components/CartSidebar';
 
 const App: React.FC = () => {
-  const [selectedItem, setSelectedItem] = useState<MenuItem | null>(null);
+  const [cartItems, setCartItems] = useState<CartItem[]>([]);
+  const [isCartOpen, setIsCartOpen] = useState(false);
 
-  const handleSommelierClick = (item: MenuItem) => {
-    setSelectedItem(item);
+  // REPLACE THIS URL WITH YOUR DESIRED LOGO IMAGE
+  const imageUrl = "https://ik.imagekit.io/j1fgksdwx/ChatGPT%20Image%20Feb%2016,%202026,%2006_12_08%20PM.png?updatedAt=1771245805784";
+
+  const addToCart = (item: MenuItem) => {
+    setCartItems(prev => {
+      const existing = prev.find(i => i.id === item.id);
+      if (existing) {
+        return prev.map(i => i.id === item.id ? { ...i, quantity: i.quantity + 1 } : i);
+      }
+      return [...prev, { ...item, quantity: 1 }];
+    });
+    // Removed setIsCartOpen(true) to prevent cart from opening automatically
   };
+
+  const updateQuantity = (id: string, delta: number) => {
+    setCartItems(prev => prev.map(item => {
+      if (item.id === id) {
+        const newQty = Math.max(0, item.quantity + delta);
+        return { ...item, quantity: newQty };
+      }
+      return item;
+    }).filter(item => item.quantity > 0));
+  };
+
+  const removeItem = (id: string) => {
+    setCartItems(prev => prev.filter(item => item.id !== id));
+  };
+
+  const cartCount = cartItems.reduce((acc, item) => acc + item.quantity, 0);
 
   return (
     <div className="min-h-screen flex flex-col bg-primary-800 text-white selection:bg-primary-200 selection:text-primary-900">
       
       {/* Hero Section - Logo Display */}
-      <header className="py-12 md:py-20 flex flex-col items-center justify-center bg-primary-800 text-center px-4 animate-fade-in-up">
+      <header className="py-12 md:py-20 flex flex-col items-center justify-center bg-primary-800 text-center px-4 animate-fade-in-up relative">
          <div className="mb-6 hover:scale-105 transition-transform duration-500">
-           <BrandLogo className="h-56 w-56 md:h-72 md:w-72" />
+           {/* Logo Image using the imageUrl constant */}
+           <img 
+             src={imageUrl} 
+             alt="Restaurant Logo" 
+             className="h-64 w-64 md:h-80 md:w-80 object-contain"
+           />
          </div>
          <h1 className="sr-only">
            Kargil Kitchen
@@ -45,11 +76,25 @@ const App: React.FC = () => {
             <MenuSection 
               key={category.id} 
               category={category} 
-              onSommelierClick={handleSommelierClick}
+              onAddToCart={addToCart}
             />
           ))}
         </div>
       </main>
+
+      {/* Floating Cart Button */}
+      <button 
+        onClick={() => setIsCartOpen(true)}
+        className="fixed bottom-6 right-6 z-40 bg-white text-primary-900 p-4 rounded-full shadow-2xl hover:bg-primary-100 transition-all hover:scale-110 active:scale-95 flex items-center justify-center"
+        aria-label="View Cart"
+      >
+        <ShoppingBag className="w-6 h-6" />
+        {cartCount > 0 && (
+          <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs font-bold w-6 h-6 rounded-full flex items-center justify-center border-2 border-primary-800">
+            {cartCount}
+          </span>
+        )}
+      </button>
 
       {/* Footer */}
       <footer className="bg-primary-900 text-primary-100 py-12 border-t border-primary-700">
@@ -93,13 +138,14 @@ const App: React.FC = () => {
         </div>
       </footer>
 
-      {/* Interactive Modal */}
-      {selectedItem && (
-        <SommelierModal 
-          item={selectedItem} 
-          onClose={() => setSelectedItem(null)} 
-        />
-      )}
+      {/* Cart Sidebar */}
+      <CartSidebar 
+        isOpen={isCartOpen} 
+        onClose={() => setIsCartOpen(false)}
+        items={cartItems}
+        onUpdateQuantity={updateQuantity}
+        onRemoveItem={removeItem}
+      />
     </div>
   );
 };
