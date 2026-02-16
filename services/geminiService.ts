@@ -1,6 +1,9 @@
 import { GoogleGenAI, Type } from "@google/genai";
 import { PairingResponse } from "../types";
 
+// Declare process to avoid TypeScript errors if types are missing during build steps
+declare const process: any;
+
 // Ensure we have a valid key or empty string to prevent crash
 const apiKey = process.env.API_KEY || '';
 // Initialize conditionally or with empty string, but handle empty string in function
