@@ -2,30 +2,24 @@ import { GoogleGenAI, Type } from "@google/genai";
 import { PairingResponse } from "../types";
 
 // Access API key using Vite's standard import.meta.env
-// Note: In standard Vite, variables must be prefixed with VITE_ to be exposed to the client
 const apiKey = import.meta.env.VITE_API_KEY || '';
 
-// Lazy initialization function to ensure we use the latest key and context
+// Lazy initialization function
 const getAI = () => {
-  if (!apiKey) return null;
+  if (!apiKey) {
+    console.error("VITE_API_KEY is not defined.");
+    return null;
+  }
   return new GoogleGenAI({ apiKey });
 };
 
 export const getWinePairing = async (dishName: string, dishDescription: string): Promise<PairingResponse> => {
-  // Runtime check for API Key
-  if (!apiKey) {
-    console.warn("VITE_API_KEY is missing. Wine pairing will be unavailable.");
+  const ai = getAI();
+  
+  if (!ai) {
     return {
       wine: "Configuration Required",
       description: "API Key is missing. Please ensure VITE_API_KEY is set in your .env file."
-    };
-  }
-
-  const ai = getAI();
-  if (!ai) {
-     return {
-      wine: "Configuration Required",
-      description: "API Key is missing or invalid."
     };
   }
 
@@ -57,7 +51,7 @@ export const getWinePairing = async (dishName: string, dishDescription: string):
     console.error("Error fetching pairing:", error);
     return {
       wine: "Sommelier Unavailable",
-      description: "We apologize, but our digital sommelier is currently busy. Please ask your server."
+      description: "Our digital sommelier is currently assisting other guests. Please try again momentarily."
     };
   }
 };
