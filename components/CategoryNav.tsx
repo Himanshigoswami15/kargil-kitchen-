@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { MenuCategory } from '../types';
 
 interface CategoryNavProps {
@@ -7,11 +7,14 @@ interface CategoryNavProps {
 
 const CategoryNav: React.FC<CategoryNavProps> = ({ categories }) => {
   const [activeId, setActiveId] = useState<string>(categories[0].id);
+  const navRef = useRef<HTMLDivElement>(null);
 
   const scrollToCategory = (id: string) => {
     const element = document.getElementById(id);
     if (element) {
-      element.scrollIntoView({ behavior: 'smooth' });
+      // Offset for sticky header
+      const y = element.getBoundingClientRect().top + window.pageYOffset - 140;
+      window.scrollTo({ top: y, behavior: 'smooth' });
       setActiveId(id);
     }
   };
@@ -22,10 +25,11 @@ const CategoryNav: React.FC<CategoryNavProps> = ({ categories }) => {
         entries.forEach((entry) => {
           if (entry.isIntersecting) {
             setActiveId(entry.target.id);
+            // Optional: scroll nav to keep active item in view
           }
         });
       },
-      { rootMargin: '-20% 0px -60% 0px' } 
+      { rootMargin: '-150px 0px -50% 0px', threshold: 0.1 } 
     );
 
     categories.forEach((cat) => {
@@ -37,22 +41,23 @@ const CategoryNav: React.FC<CategoryNavProps> = ({ categories }) => {
   }, [categories]);
 
   return (
-    <div className="sticky top-0 z-40 bg-primary-800/95 backdrop-blur-md border-b border-primary-700 shadow-lg shadow-black/10">
-      <div className="max-w-5xl mx-auto overflow-x-auto hide-scrollbar">
-        <div className="flex justify-start md:justify-center min-w-max px-4">
+    <div className="sticky top-0 z-40 bg-primary-950/90 backdrop-blur-md border-b border-primary-800 shadow-xl">
+      <div className="max-w-7xl mx-auto overflow-x-auto hide-scrollbar" ref={navRef}>
+        <div className="flex justify-start md:justify-center items-center min-w-max px-4 md:px-8 py-2">
           {categories.map((cat) => (
             <button
               key={cat.id}
               onClick={() => scrollToCategory(cat.id)}
               className={`
-                px-6 py-4 text-sm uppercase tracking-widest font-sans font-medium transition-all relative
-                ${activeId === cat.id ? 'text-white' : 'text-primary-300 hover:text-white'}
+                group relative px-5 py-4 text-xs md:text-sm uppercase tracking-[0.15em] font-sans font-medium transition-all duration-300
+                ${activeId === cat.id ? 'text-accent-400' : 'text-primary-300 hover:text-white'}
               `}
             >
               {cat.title}
-              {activeId === cat.id && (
-                <span className="absolute bottom-0 left-0 w-full h-0.5 bg-white animate-fade-in" />
-              )}
+              <span className={`
+                absolute bottom-0 left-1/2 transform -translate-x-1/2 h-0.5 bg-accent-400 transition-all duration-300
+                ${activeId === cat.id ? 'w-full opacity-100' : 'w-0 opacity-0 group-hover:w-1/2 group-hover:opacity-50'}
+              `} />
             </button>
           ))}
         </div>

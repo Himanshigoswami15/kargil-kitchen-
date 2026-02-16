@@ -21,72 +21,74 @@ const CartSidebar: React.FC<CartSidebarProps> = ({ isOpen, onClose, items, onUpd
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex justify-end">
+    <div className="fixed inset-0 z-[60] flex justify-end">
       {/* Backdrop */}
       <div 
-        className="absolute inset-0 bg-black/60 backdrop-blur-sm transition-opacity" 
+        className="absolute inset-0 bg-black/70 backdrop-blur-sm transition-opacity animate-fade-in" 
         onClick={onClose}
       ></div>
       
       {/* Sidebar Panel */}
-      <div className="relative w-full max-w-md bg-primary-900 h-full shadow-2xl border-l border-primary-700 flex flex-col transform transition-transform duration-300">
+      <div className="relative w-full max-w-md bg-primary-950 h-full shadow-2xl border-l border-primary-800 flex flex-col transform transition-transform duration-300 animate-slide-up sm:animate-none">
         
         {/* Header */}
-        <div className="p-5 border-b border-primary-700 flex justify-between items-center bg-primary-800">
+        <div className="p-6 border-b border-primary-800 flex justify-between items-center bg-primary-900/50">
           <div className="flex items-center gap-3">
-            <ShoppingBag className="w-6 h-6 text-primary-200" />
-            <h2 className="font-serif text-2xl text-white tracking-wide">Your Order</h2>
+            <ShoppingBag className="w-5 h-5 text-accent-400" />
+            <h2 className="font-serif text-2xl text-white tracking-wide italic">Your Selection</h2>
           </div>
-          <button onClick={onClose} className="text-primary-300 hover:text-white transition-colors p-2 hover:bg-primary-700 rounded-full">
+          <button onClick={onClose} className="text-primary-400 hover:text-accent-400 transition-colors">
             <X className="w-6 h-6" />
           </button>
         </div>
 
         {/* Cart Items */}
-        <div className="flex-1 overflow-y-auto p-5 space-y-4">
+        <div className="flex-1 overflow-y-auto p-6 space-y-6">
           {items.length === 0 ? (
-            <div className="h-full flex flex-col items-center justify-center text-primary-300 font-sans opacity-60">
-              <ShoppingBag className="w-16 h-16 mb-4 stroke-1" />
-              <p className="text-lg">Your cart is empty.</p>
-              <p className="text-sm">Start adding some delicious dishes!</p>
+            <div className="h-full flex flex-col items-center justify-center text-primary-400 font-sans opacity-60">
+              <div className="w-20 h-20 rounded-full border border-primary-800 flex items-center justify-center mb-6">
+                 <ShoppingBag className="w-8 h-8 stroke-1" />
+              </div>
+              <p className="text-xl font-serif italic mb-2">Your plate is empty</p>
+              <p className="text-sm uppercase tracking-wider">Explore our menu to begin</p>
             </div>
           ) : (
             items.map(item => (
-              <div key={item.id} className="flex gap-4 bg-primary-800/40 p-3 rounded-lg border border-primary-700/50 hover:border-primary-500 transition-colors">
-                 <div className="w-20 h-20 flex-shrink-0 bg-primary-950 rounded overflow-hidden">
-                   <img src={item.image} alt={item.name} className="w-full h-full object-cover" />
+              <div key={item.id} className="flex gap-4 group">
+                 <div className="w-20 h-20 flex-shrink-0 bg-primary-900 rounded-sm overflow-hidden border border-primary-800">
+                   <img src={item.image} alt={item.name} className="w-full h-full object-cover opacity-80 group-hover:opacity-100 transition-opacity" />
                  </div>
                  
-                 <div className="flex-1 flex flex-col justify-between">
+                 <div className="flex-1 flex flex-col justify-between py-1">
                     <div className="flex justify-between items-start">
-                       <h3 className="font-serif text-lg text-white leading-tight pr-2">{item.name}</h3>
-                       <span className="font-sans text-primary-200 font-semibold whitespace-nowrap">{item.price}</span>
+                       <h3 className="font-serif text-lg text-primary-100 leading-tight pr-2">{item.name}</h3>
+                       <span className="font-sans text-accent-400 font-medium text-sm whitespace-nowrap">{item.price}</span>
                     </div>
                     
                     <div className="flex justify-between items-center mt-3">
                        {/* Quantity Controls */}
-                       <div className="flex items-center bg-primary-950 rounded border border-primary-700">
+                       <div className="flex items-center gap-3">
                           <button 
                             onClick={() => onUpdateQuantity(item.id, -1)} 
-                            className="p-1.5 text-primary-300 hover:text-white hover:bg-primary-700 rounded-l transition-colors"
+                            className="w-6 h-6 flex items-center justify-center rounded-full border border-primary-700 text-primary-400 hover:border-accent-500 hover:text-accent-400 transition-colors"
                           >
-                            <Minus size={14} />
+                            <Minus size={12} />
                           </button>
-                          <span className="px-3 text-sm text-white font-sans font-medium min-w-[2rem] text-center">{item.quantity}</span>
+                          <span className="text-sm text-white font-sans font-medium w-4 text-center">{item.quantity}</span>
                           <button 
                             onClick={() => onUpdateQuantity(item.id, 1)} 
-                            className="p-1.5 text-primary-300 hover:text-white hover:bg-primary-700 rounded-r transition-colors"
+                            className="w-6 h-6 flex items-center justify-center rounded-full border border-primary-700 text-primary-400 hover:border-accent-500 hover:text-accent-400 transition-colors"
                           >
-                            <Plus size={14} />
+                            <Plus size={12} />
                           </button>
                        </div>
                        
                        {/* Remove Button */}
                        <button 
                          onClick={() => onRemoveItem(item.id)} 
-                         className="text-red-400 hover:text-red-300 text-xs uppercase tracking-wider flex items-center gap-1.5 font-medium px-2 py-1 hover:bg-red-900/20 rounded transition-colors"
+                         className="text-primary-500 hover:text-red-400 text-[10px] uppercase tracking-wider flex items-center gap-1.5 transition-colors"
                        >
-                          <Trash2 size={14} /> Remove
+                          <Trash2 size={12} /> Remove
                        </button>
                     </div>
                  </div>
@@ -96,17 +98,17 @@ const CartSidebar: React.FC<CartSidebarProps> = ({ isOpen, onClose, items, onUpd
         </div>
 
         {/* Footer / Totals */}
-        <div className="p-6 border-t border-primary-700 bg-primary-800 shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.3)]">
-           <div className="flex justify-between items-end mb-6">
-             <span className="font-sans text-primary-300 uppercase tracking-widest text-xs font-bold mb-1">Total Amount</span>
-             <span className="font-serif text-4xl text-white">₹{total.toLocaleString('en-IN')}</span>
+        <div className="p-8 border-t border-primary-800 bg-primary-900/30">
+           <div className="flex justify-between items-baseline mb-8">
+             <span className="font-sans text-primary-400 uppercase tracking-widest text-xs font-bold">Total</span>
+             <span className="font-serif text-4xl text-accent-400">₹{total.toLocaleString('en-IN')}</span>
            </div>
            <button 
-             className="w-full py-4 bg-primary-100 hover:bg-white text-primary-900 font-sans font-bold uppercase tracking-[0.2em] rounded shadow-lg hover:shadow-xl transition-all active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed disabled:active:scale-100" 
+             className="w-full py-4 bg-accent-600 hover:bg-accent-500 text-primary-950 font-sans font-bold uppercase tracking-[0.2em] rounded-sm transition-all active:scale-[0.99] disabled:opacity-50 disabled:cursor-not-allowed shadow-[0_0_15px_rgba(212,175,55,0.3)] hover:shadow-[0_0_25px_rgba(212,175,55,0.5)]" 
              disabled={items.length === 0}
-             onClick={() => alert('Order placed successfully!')}
+             onClick={() => alert('Your order has been placed successfully. Thank you for dining with us.')}
            >
-             Checkout
+             Confirm Order
            </button>
         </div>
       </div>

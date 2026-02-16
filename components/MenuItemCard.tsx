@@ -1,5 +1,5 @@
 import React from 'react';
-import { ShoppingBag } from 'lucide-react';
+import { Plus } from 'lucide-react';
 import { MenuItem } from '../types';
 
 interface MenuItemCardProps {
@@ -9,33 +9,39 @@ interface MenuItemCardProps {
 
 const MenuItemCard: React.FC<MenuItemCardProps> = ({ item, onAddToCart }) => {
   return (
-    <div className="group relative bg-primary-900 rounded-xl shadow-md hover:shadow-xl hover:shadow-black/20 transition-all duration-300 overflow-hidden border border-primary-700 flex flex-col md:flex-row h-full">
+    <div className="group flex flex-col sm:flex-row bg-primary-900/40 rounded-sm border border-primary-800/60 hover:border-accent-600/50 hover:bg-primary-900/60 transition-all duration-500 overflow-hidden relative">
+      
       {/* Image Section */}
-      <div className="w-full md:w-1/3 h-48 md:h-auto overflow-hidden relative">
+      <div className="w-full sm:w-40 h-56 sm:h-auto overflow-hidden relative flex-shrink-0">
         <img 
           src={item.image} 
           alt={item.name} 
-          className="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-700 opacity-90 group-hover:opacity-100"
+          className="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-700 brightness-90 group-hover:brightness-100"
+          loading="lazy"
         />
+        <div className="absolute inset-0 bg-gradient-to-t from-primary-950/80 to-transparent sm:bg-gradient-to-r sm:from-transparent sm:to-primary-950/20"></div>
       </div>
 
       {/* Content Section */}
-      <div className="flex-1 p-5 flex flex-col justify-between">
-        <div>
-          <div className="flex justify-between items-start mb-2">
-            <h3 className="font-serif text-xl text-white font-medium group-hover:text-primary-200 transition-colors">
+      <div className="flex-1 p-6 flex flex-col justify-between relative">
+        <div className="space-y-3">
+          <div className="flex justify-between items-start gap-4">
+            <h3 className="font-serif text-2xl text-primary-50 font-medium tracking-wide group-hover:text-accent-200 transition-colors duration-300">
               {item.name}
             </h3>
+            <span className="font-sans text-lg text-accent-400 font-semibold whitespace-nowrap pt-1">
+              {item.price}
+            </span>
           </div>
           
-          <p className="text-primary-100 text-sm font-sans leading-relaxed mb-4 line-clamp-3 md:line-clamp-none">
-            {item.description}
+          <p className="text-primary-200/80 text-sm font-sans leading-relaxed font-light line-clamp-2 sm:line-clamp-3">
+            {item.description || "A delightful preparation with authentic spices and fresh ingredients."}
           </p>
           
-          {item.tags && (
-            <div className="flex gap-2 mb-4">
+          {item.tags && item.tags.length > 0 && (
+            <div className="flex flex-wrap gap-2 pt-1">
               {item.tags.map(tag => (
-                <span key={tag} className="px-2 py-0.5 border border-primary-600 text-[10px] uppercase tracking-wider text-primary-300 rounded-sm">
+                <span key={tag} className="px-2 py-[2px] border border-primary-700 text-[10px] uppercase tracking-wider text-primary-400 rounded-sm">
                   {tag}
                 </span>
               ))}
@@ -43,18 +49,16 @@ const MenuItemCard: React.FC<MenuItemCardProps> = ({ item, onAddToCart }) => {
           )}
         </div>
 
-        {/* Price and Add to Cart Section */}
-        <div className="flex items-center justify-between pt-4 border-t border-primary-800 mt-auto">
-           <span className="font-serif text-2xl text-primary-200 font-semibold">
-              {item.price}
-           </span>
-           
+        {/* Action Area */}
+        <div className="mt-6 flex items-center justify-end">
            <button 
              onClick={() => onAddToCart(item)}
-             className="flex items-center gap-2 px-5 py-2.5 bg-primary-700 hover:bg-white hover:text-primary-900 text-white text-xs font-bold uppercase tracking-widest rounded transition-colors shadow-sm active:scale-95"
+             className="group/btn relative overflow-hidden px-6 py-2 bg-transparent border border-accent-600/50 hover:border-accent-400 text-accent-400 hover:text-primary-950 text-xs font-bold uppercase tracking-widest transition-all duration-300 rounded-sm"
            >
-             <ShoppingBag className="w-4 h-4" />
-             Add
+             <span className="relative z-10 flex items-center gap-2">
+               Add to Order
+             </span>
+             <div className="absolute inset-0 bg-accent-400 transform scale-x-0 group-hover/btn:scale-x-100 transition-transform duration-300 origin-left"></div>
            </button>
         </div>
       </div>

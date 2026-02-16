@@ -9,16 +9,17 @@ interface MenuSectionProps {
 
 const MenuSection: React.FC<MenuSectionProps> = ({ category, onAddToCart }) => {
   return (
-    <section id={category.id} className="py-12 scroll-mt-24">
-      <div className="flex items-center justify-center mb-10">
-        <div className="h-px w-8 bg-primary-200 opacity-40"></div>
-        <h2 className="px-6 font-serif text-3xl md:text-4xl text-white text-center italic">
-          {category.title}
+    <section id={category.id} className="py-16 md:py-24 scroll-mt-20">
+      <div className="flex items-center justify-center mb-12 md:mb-16">
+        <div className="h-px w-12 md:w-24 bg-gradient-to-r from-transparent via-accent-500 to-transparent opacity-60"></div>
+        <h2 className="px-8 font-serif text-3xl md:text-5xl text-accent-100 text-center tracking-wide relative">
+          <span className="relative z-10">{category.title}</span>
+          <span className="absolute -inset-1 blur-xl bg-accent-500/10 rounded-full z-0"></span>
         </h2>
-        <div className="h-px w-8 bg-primary-200 opacity-40"></div>
+        <div className="h-px w-12 md:w-24 bg-gradient-to-r from-transparent via-accent-500 to-transparent opacity-60"></div>
       </div>
       
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8 px-4 md:px-0 max-w-5xl mx-auto">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 md:gap-10 px-4 md:px-8 max-w-7xl mx-auto">
         {category.items.map(item => (
           <MenuItemCard 
             key={item.id} 
