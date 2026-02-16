@@ -1,28 +1,28 @@
 import { GoogleGenAI, Type } from "@google/genai";
 import { PairingResponse } from "../types";
 
-// Access API key using Vite's standard import.meta.env
-// We handle both VITE_API_KEY (standard) and API_KEY (custom config) to be safe
-const apiKey = import.meta.env.VITE_API_KEY || '';
-
-// Lazy initialization function
-const getAI = () => {
-  if (!apiKey) {
-    console.error("VITE_API_KEY is not defined.");
-    return null;
-  }
-  return new GoogleGenAI({ apiKey });
+// Declare process to avoid TypeScript errors in the client-side code
+// and to comply with the guideline to use process.env.API_KEY.
+declare const process: {
+  env: {
+    API_KEY: string;
+  };
 };
 
 export const getWinePairing = async (dishName: string, dishDescription: string): Promise<PairingResponse> => {
-  const ai = getAI();
+  // The guidelines require using process.env.API_KEY exclusively.
+  // We assume this variable is available in the execution context as per instructions.
+  const apiKey = process.env.API_KEY;
   
-  if (!ai) {
+  if (!apiKey) {
+    console.error("API_KEY is not defined.");
     return {
       wine: "Configuration Required",
-      description: "API Key is missing. Please ensure VITE_API_KEY is set in your .env file."
+      description: "API Key is missing."
     };
   }
+
+  const ai = new GoogleGenAI({ apiKey });
 
   try {
     const modelId = 'gemini-3-flash-preview';
@@ -39,7 +39,8 @@ export const getWinePairing = async (dishName: string, dishDescription: string):
           properties: {
             wine: { type: Type.STRING },
             description: { type: Type.STRING }
-          }
+          },
+          propertyOrdering: ["wine", "description"]
         }
       }
     });
