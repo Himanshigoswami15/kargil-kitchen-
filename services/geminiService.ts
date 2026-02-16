@@ -1,8 +1,8 @@
 import { GoogleGenAI, Type } from "@google/genai";
 import { PairingResponse } from "../types";
 
-const apiKey = process.env.API_KEY || '';
-const ai = new GoogleGenAI({ apiKey });
+// Fix: Initialize with process.env.API_KEY directly
+const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
 
 export const getWinePairing = async (dishName: string, dishDescription: string): Promise<PairingResponse> => {
   try {
