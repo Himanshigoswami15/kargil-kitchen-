@@ -2,6 +2,7 @@ import { GoogleGenAI, Type } from "@google/genai";
 import { PairingResponse } from "../types";
 
 // Access API key using Vite's standard import.meta.env
+// We handle both VITE_API_KEY (standard) and API_KEY (custom config) to be safe
 const apiKey = import.meta.env.VITE_API_KEY || '';
 
 // Lazy initialization function
